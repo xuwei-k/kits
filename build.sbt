@@ -1,5 +1,7 @@
 organization := "org.halcat"
 
+enablePlugins(JmhPlugin)
+
 version := "0.6.0-SNAPSHOT"
 
 scalaVersion := "2.11.7"
@@ -13,8 +15,6 @@ libraryDependencies ++= Seq(
 scalacOptions ++= Seq("-feature", "-language:higherKinds")
 
 fork in run := true
-
-javaOptions ++= Seq("-Djava.compiler=none", "-XX:+PrintCompilation")
 
 target in Compile in doc := baseDirectory.value / "api"
 

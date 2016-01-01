@@ -1,6 +1,8 @@
 package kits.free
 
-object Bench extends App {
+import org.openjdk.jmh.annotations.Benchmark
+
+class Bench {
 
   type ReaderString[A] = Reader[String, A]
 
@@ -46,26 +48,25 @@ object Bench extends App {
     }
   }
 
-  val r1 = for (n <- 1 to 1000) yield {
-    val s = System.nanoTime
-    Free.run(Writer.run(Reader.run(e1[ReaderString :+: WriterString :+: Void](n), "hoge")))
-    System.nanoTime - s
-  }
+  def r1(n: Int): String = Free.run(Writer.run(Reader.run(e1[ReaderString :+: WriterString :+: Void](n), "hoge")))._2
 
-  val r2 = for (n <- 1 to 1000) yield {
-    val s = System.nanoTime
-    e2(n).run("hoge").run.run
-    System.nanoTime - s
-  }
+  @Benchmark
+  def r1_1000: String = r1(1000)
+  @Benchmark
+  def r1_100: String = r1(100)
 
-  val r3 = for (n <- 1 to 1000) yield {
-    val s = System.nanoTime
-    e3(n).run("hoge", ()).run
-    System.nanoTime - s
-  }
+  def r2(n: Int) = e2(n).run("hoge").run.run._1
 
-  println(r1.takeRight(100).sum.toDouble / 100000000)
-  println(r2.takeRight(100).sum.toDouble / 100000000)
-  println(r3.takeRight(100).sum.toDouble / 100000000)
+  @Benchmark
+  def r2_1000: String = r2(1000)
+  @Benchmark
+  def r2_100: String = r2(100)
+
+  def r3(n: Int): String = e3(n).run("hoge", ()).run._1
+
+  @Benchmark
+  def r3_1000: String = r3(1000)
+  @Benchmark
+  def r3_100: String = r3(100)
 
 }
