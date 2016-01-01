@@ -9,7 +9,7 @@ scalaVersion := "2.11.7"
 libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "2.2.5" % "test",
   "org.scalacheck" %% "scalacheck" % "1.12.4" % "test",
-  "org.scalaz" %% "scalaz-core" % "7.2.0"
+  "org.scalaz" %% "scalaz-core" % "7.1.6"
 )
 
 scalacOptions ++= Seq("-feature", "-language:higherKinds")
