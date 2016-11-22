@@ -4,11 +4,28 @@ lazy val commonSettings = Seq(
   organization := "org.halcat",
   version := "0.7.0-SNAPSHOT",
   scalaVersion := "2.12.0",
+  crossScalaVersions Seq("2.12.0", "2.11.8"),
   libraryDependencies ++= Seq(
     "org.scalatest" %% "scalatest" % "3.0.1" % "test",
     "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
   ),
-  scalacOptions ++= Seq("-feature", "-language:higherKinds", "-Ypartial-unification"),
+  scalacOptions ++= Seq("-feature", "-language:higherKinds"),
+  scalacOptions ++= {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, v)) if v >= 12 =>
+        "-Ypartial-unification" :: Nil
+      case _ =>
+        Nil
+    }
+  },
+  libraryDependencies ++= {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, 11)) =>
+        compilerPlugin("com.milessabin" % "si2712fix-plugin_2.11.8" % "1.2.0") :: Nil
+      case _ =>
+        Nil
+    }
+  },
   publishMavenStyle := true,
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
